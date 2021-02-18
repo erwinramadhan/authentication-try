@@ -1,28 +1,23 @@
 const { User } = require('../models')
-const passport = require('passport')
+const passport = require('../lib/passport')
 
 module.exports = {
-    register: (req, res, next) =>{
+    register: (req, res, next) => {
         User.register(req.body)
         .then(()=>{
             res.redirect('/login')
         })
         .catch(err => next(err))
+    },
+
+    login: passport.authenticate('local', {
+        successRedirect: '/whoami',
+        failureRedirect: '/login',
+        failureFlash: true //untuk mengaktifkan flash
+    }),
+
+    whoami: (req, res) => {
+        // req.user adalah instance dari User Model, hasil authentikasi dari passport
+        res.render('profile', req.user.dataValues)
     }
 }
-
-// module.exports = {
-//     create: (req, res) => {
-//         const { username, password } = req.body
-//         User.create({
-//             username: username,
-//             password: password
-//         })
-//         .then(()=> res.redirect("/users"))
-//         .catch(err => res.send(`Failed - ${JSON.stringify(err.message)}`))
-//     },
-//     index: (req, res)=> {
-//         Book.findAll()
-//         .then(result => res.render("user/index", {username: "Users", users: result}))
-//     }
-// }

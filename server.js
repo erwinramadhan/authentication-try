@@ -13,7 +13,7 @@ app.use(session({
     saveUninitialized: false
 }))
 
-const passport = require('passport')
+const passport = require('./lib/passport')
 app.use(passport.initialize())
 app.use(passport.session())
 
